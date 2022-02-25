@@ -10,8 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import br.dev.leoduarte.sicredi.controller.dto.request.AssociadoDTOE;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "associado")
+@NoArgsConstructor
 public class Associado implements Serializable {
 
 	private static final long serialVersionUID = 6234656322024505165L;
@@ -22,7 +26,20 @@ public class Associado implements Serializable {
 
 	private String nome;
 
-	@ManyToMany(mappedBy = "associados")
-	private List<Pauta> pautas;
+	public Associado(String nome) {
+		this.nome = nome;
+	}
+
+	public Associado(AssociadoDTOE novoAssociado) {
+		this.nome = novoAssociado.getNome();
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
 
 }

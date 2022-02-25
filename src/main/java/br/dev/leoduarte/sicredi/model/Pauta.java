@@ -15,7 +15,12 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import br.dev.leoduarte.sicredi.controller.dto.request.PautaDTOE;
+import br.dev.leoduarte.sicredi.exception.DataInvalidaException;
+import lombok.Getter;
+
 @Entity
+@Getter
 @Table(name = "pauta")
 public class Pauta implements Serializable {
 
@@ -25,6 +30,8 @@ public class Pauta implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	private String nomeAssembleia;
+
 	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private LocalDateTime tempLimiteVotacao;
 
@@ -32,5 +39,33 @@ public class Pauta implements Serializable {
 	private List<Associado> associados;
 
 	@OneToMany(mappedBy = "id.pauta")
-	private List<VotoNaPauta> votos = new ArrayList<>();
+	private List<VotoNaPauta> votos;
+
+	public Pauta() {
+		this.associados = new ArrayList<>();
+	}
+
+	public Pauta(PautaDTOE obj) {
+		this.associados = new ArrayList<>();
+		this.nomeAssembleia = obj.getNomeAssembleia();
+		this.tempLimiteVotacao = verificarLimiteVotacao(obj.getTempLimiteVotacao());
+	}
+
+	private LocalDateTime verificarLimiteVotacao(LocalDateTime t) {
+
+		if (t == null) {
+			return LocalDateTime.now().plusMinutes(1L);
+		}
+
+		if (t.isBefore(LocalDateTime.now())) {
+			throw new DataInvalidaException("Data invalida: " + t + ", Na criacao da classe: " + Pauta.class.getName());
+		}
+
+		return t;
+	}
+
+	public void adicionarAssociado(Associado associado) {
+		this.associados.add(associado);
+	}
+
 }
