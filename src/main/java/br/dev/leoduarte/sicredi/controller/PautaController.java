@@ -13,7 +13,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.dev.leoduarte.sicredi.controller.dto.request.PautaDTOE;
 import br.dev.leoduarte.sicredi.controller.dto.response.PautaDTOS;
+import br.dev.leoduarte.sicredi.controller.dto.response.Resultado;
 import br.dev.leoduarte.sicredi.service.PautaService;
+import br.dev.leoduarte.sicredi.service.VotoNaPautaService;
 
 @RestController
 @RequestMapping(path = "/pautas")
@@ -22,27 +24,19 @@ public class PautaController {
 	@Autowired
 	private PautaService service;
 
-	/**
-	 * Cadastra uma nova Pauta
-	 * 
-	 * @param novaPauta
-	 * @param uri
-	 * @return
-	 */
+	@Autowired
+	private VotoNaPautaService votoNaPautaService;
+
 	@PostMapping
-	public ResponseEntity<PautaDTOS> criarNovaPauta(@Validated @RequestBody PautaDTOE novaPauta,
+	public ResponseEntity<PautaDTOS> criarNovaPauta( //
+			@Validated @RequestBody PautaDTOE novaPauta, //
 			UriComponentsBuilder uri) {
 		return service.criarNova(novaPauta, uri);
 	}
 
-	/**
-	 * Busca uma Pauta pelo seu Id
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@GetMapping("/{id}")
-	public ResponseEntity<PautaDTOS> pesquisarPorId(@PathVariable Long id) {
+	public ResponseEntity<PautaDTOS> pesquisarPorId( //
+			@PathVariable Long id) {
 		return service.pesquisarPorId(id);
 	}
 
@@ -53,4 +47,12 @@ public class PautaController {
 			UriComponentsBuilder uri) {
 		return service.adicionarAssociado(idPauta, idAssociado, uri);
 	}
+
+	@GetMapping("/contabilizar/{idPauta}")
+	public ResponseEntity<Resultado> contabilizar( //
+			@PathVariable Long idPauta, //
+			UriComponentsBuilder uri) {
+		return votoNaPautaService.contabilizarVotacao(idPauta);
+	}
+
 }

@@ -12,12 +12,15 @@ import br.dev.leoduarte.sicredi.controller.dto.request.AssociadoDTOE;
 import br.dev.leoduarte.sicredi.controller.dto.response.AssociadoDTOS;
 import br.dev.leoduarte.sicredi.model.Associado;
 import br.dev.leoduarte.sicredi.repository.AssociadoRepository;
+import br.dev.leoduarte.sicredi.utils.FormatarData;
 
 @Service
 public class AssociadoService {
 
 	@Autowired
 	private AssociadoRepository repository;
+
+	private FormatarData formatada = new FormatarData();
 
 	public ResponseEntity<AssociadoDTOS> criarNovo(AssociadoDTOE novoAssociado, UriComponentsBuilder uriBuilder) {
 

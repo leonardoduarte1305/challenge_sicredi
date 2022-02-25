@@ -6,7 +6,7 @@ public enum Voto {
 
 	private int cod;
 
-	Voto(int i) {
+	private Voto(int i) {
 		this.cod = i;
 	}
 

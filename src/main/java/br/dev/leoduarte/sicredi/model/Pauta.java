@@ -2,6 +2,7 @@ package br.dev.leoduarte.sicredi.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class Pauta implements Serializable {
 
 	private String nomeAssembleia;
 
-	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime tempLimiteVotacao;
 
 	@ManyToMany
@@ -58,7 +59,9 @@ public class Pauta implements Serializable {
 		}
 
 		if (t.isBefore(LocalDateTime.now())) {
-			throw new DataInvalidaException("Data invalida: " + t + ", Na criacao da classe: " + Pauta.class.getName());
+			throw new DataInvalidaException(
+					"Data invalida: " + t.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"))
+							+ ", Na criacao da classe: " + Pauta.class.getName());
 		}
 
 		return t;

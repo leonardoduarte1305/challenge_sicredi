@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import br.dev.leoduarte.sicredi.controller.dto.request.AssociadoDTOE;
 import br.dev.leoduarte.sicredi.controller.dto.response.AssociadoDTOS;
 import br.dev.leoduarte.sicredi.service.AssociadoService;
+import br.dev.leoduarte.sicredi.service.VotoNaPautaService;
 
 @RestController
 @RequestMapping(path = "/associados")
@@ -22,29 +23,27 @@ public class AssociadoController {
 	@Autowired
 	private AssociadoService service;
 
-	/**
-	 * Cadastra um novo Associado
-	 * 
-	 * @param novoAssociado
-	 * @param uri
-	 * @return
-	 */
+	@Autowired
+	private VotoNaPautaService votoNaPautaService;
+
 	@PostMapping
 	public ResponseEntity<AssociadoDTOS> criarNovoAssociado(@Validated @RequestBody AssociadoDTOE novoAssociado,
 			UriComponentsBuilder uri) {
 		return service.criarNovo(novoAssociado, uri);
 	}
 
-	/**
-	 * Busca um Associado pelo seu Id
-	 * 
-	 * @param id
-	 * @return
-	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<AssociadoDTOS> pesquisarPorId(@PathVariable Long id) {
 		return service.pesquisarPorId(id);
 	}
 
-	// Associar as pautas em que ele pode votar
+	@PostMapping("/{idPauta}/{idAssociado}/{voto}")
+	public ResponseEntity<Object> votar( //
+			@PathVariable Long idPauta, //
+			@PathVariable Long idAssociado, //
+			@PathVariable Long voto, //
+			UriComponentsBuilder uri) {
+		return votoNaPautaService.adicionarVotoDoAssociado(idPauta, idAssociado, voto, uri);
+	}
+
 }

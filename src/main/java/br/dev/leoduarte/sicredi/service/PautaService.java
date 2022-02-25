@@ -16,6 +16,7 @@ import br.dev.leoduarte.sicredi.model.Pauta;
 import br.dev.leoduarte.sicredi.repository.AssociadoRepository;
 import br.dev.leoduarte.sicredi.repository.PautaRepository;
 import br.dev.leoduarte.sicredi.repository.VotoNaPautaRepository;
+import br.dev.leoduarte.sicredi.utils.FormatarData;
 
 @Service
 public class PautaService {
@@ -28,6 +29,8 @@ public class PautaService {
 
 	@Autowired
 	private VotoNaPautaRepository votoNaPautaRepo;
+
+	private FormatarData formatada = new FormatarData();
 
 	public ResponseEntity<PautaDTOS> criarNova(PautaDTOE novaPauta, UriComponentsBuilder uriBuilder) {
 		Pauta salva = pautaRepo.save(new Pauta(novaPauta));
