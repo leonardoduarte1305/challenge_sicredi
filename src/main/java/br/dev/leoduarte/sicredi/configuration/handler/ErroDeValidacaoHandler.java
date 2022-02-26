@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import br.dev.leoduarte.sicredi.exception.DataInvalidaException;
 import br.dev.leoduarte.sicredi.exception.EntidadeNaoEncontradaException;
 import br.dev.leoduarte.sicredi.exception.SessaoDeVotacaoExpiradaException;
+import br.dev.leoduarte.sicredi.exception.VotoInvalidoException;
 import br.dev.leoduarte.sicredi.exception.VotoJaComputadoException;
 
 @RestControllerAdvice(basePackages = { "br.dev.leoduarte.sicredi.controller" })
@@ -59,5 +60,10 @@ public class ErroDeValidacaoHandler {
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<String> handleData(EntidadeNaoEncontradaException e) {
 		return ResponseEntity.notFound().build();
+	}
+
+	@ExceptionHandler(VotoInvalidoException.class)
+	public ResponseEntity<String> handleData(VotoInvalidoException e) {
+		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 }
