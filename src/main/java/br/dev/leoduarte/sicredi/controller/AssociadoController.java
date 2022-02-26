@@ -27,13 +27,15 @@ public class AssociadoController {
 	private VotoNaPautaService votoNaPautaService;
 
 	@PostMapping
-	public ResponseEntity<AssociadoDTOS> criarNovoAssociado(@Validated @RequestBody AssociadoDTOE novoAssociado,
+	public ResponseEntity<AssociadoDTOS> criarNovoAssociado( //
+			@Validated @RequestBody AssociadoDTOE novoAssociado, //
 			UriComponentsBuilder uri) {
 		return service.criarNovo(novoAssociado, uri);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<AssociadoDTOS> pesquisarPorId(@PathVariable Long id) {
+	public ResponseEntity<AssociadoDTOS> pesquisarPorId( //
+			@PathVariable Long id) {
 		return service.pesquisarPorId(id);
 	}
 

@@ -1,7 +1,6 @@
 package br.dev.leoduarte.sicredi.service;
 
 import java.net.URI;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,17 +9,15 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.dev.leoduarte.sicredi.controller.dto.request.AssociadoDTOE;
 import br.dev.leoduarte.sicredi.controller.dto.response.AssociadoDTOS;
+import br.dev.leoduarte.sicredi.exception.EntidadeNaoEncontradaException;
 import br.dev.leoduarte.sicredi.model.Associado;
 import br.dev.leoduarte.sicredi.repository.AssociadoRepository;
-import br.dev.leoduarte.sicredi.utils.FormatarData;
 
 @Service
 public class AssociadoService {
 
 	@Autowired
 	private AssociadoRepository repository;
-
-	private FormatarData formatada = new FormatarData();
 
 	public ResponseEntity<AssociadoDTOS> criarNovo(AssociadoDTOE novoAssociado, UriComponentsBuilder uriBuilder) {
 
@@ -33,13 +30,13 @@ public class AssociadoService {
 	}
 
 	public ResponseEntity<AssociadoDTOS> pesquisarPorId(Long id) {
-		Optional<Associado> encontrado = repository.findById(id);
+		return ResponseEntity.ok(new AssociadoDTOS(encontrarAssociado(id)));
+	}
 
-		if (encontrado.isPresent()) {
-			return ResponseEntity.ok(new AssociadoDTOS(encontrado.get()));
-		}
-
-		return ResponseEntity.notFound().build();
+	private Associado encontrarAssociado(Long id) {
+		return repository.findById(id).orElseThrow(() -> {
+			throw new EntidadeNaoEncontradaException("Associado não encontrado id: " + id);
+		});
 	}
 
 }

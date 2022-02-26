@@ -13,7 +13,7 @@ import lombok.Getter;
 @Getter
 public class PautaDTOE {
 
-	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
 	private LocalDateTime tempLimiteVotacao;
 
 	@NotNull(message = "O nome da assembleia não pode ser nulo.")

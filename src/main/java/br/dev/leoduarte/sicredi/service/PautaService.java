@@ -1,22 +1,21 @@
 package br.dev.leoduarte.sicredi.service;
 
 import java.net.URI;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.dev.leoduarte.sicredi.controller.dto.request.PautaDTOE;
 import br.dev.leoduarte.sicredi.controller.dto.response.PautaDTOS;
+import br.dev.leoduarte.sicredi.exception.EntidadeNaoEncontradaException;
 import br.dev.leoduarte.sicredi.model.Associado;
 import br.dev.leoduarte.sicredi.model.Pauta;
 import br.dev.leoduarte.sicredi.repository.AssociadoRepository;
 import br.dev.leoduarte.sicredi.repository.PautaRepository;
-import br.dev.leoduarte.sicredi.repository.VotoNaPautaRepository;
-import br.dev.leoduarte.sicredi.utils.FormatarData;
 
 @Service
 public class PautaService {
@@ -27,11 +26,7 @@ public class PautaService {
 	@Autowired
 	private AssociadoRepository assocRepo;
 
-	@Autowired
-	private VotoNaPautaRepository votoNaPautaRepo;
-
-	private FormatarData formatada = new FormatarData();
-
+	@Transactional
 	public ResponseEntity<PautaDTOS> criarNova(PautaDTOE novaPauta, UriComponentsBuilder uriBuilder) {
 		Pauta salva = pautaRepo.save(new Pauta(novaPauta));
 		PautaDTOS retorno = new PautaDTOS(salva);
@@ -42,34 +37,30 @@ public class PautaService {
 	}
 
 	public ResponseEntity<PautaDTOS> pesquisarPorId(Long id) {
-		Optional<Pauta> encontrado = pautaRepo.findById(id);
-
-		if (encontrado.isPresent()) {
-			return ResponseEntity.ok(new PautaDTOS(encontrado.get()));
-		}
-
-		return ResponseEntity.notFound().build();
+		return ResponseEntity.ok(new PautaDTOS(encontrarPauta(id)));
 	}
 
+	@Transactional
 	public ResponseEntity<Object> adicionarAssociado(Long idPauta, Long idAssociado, UriComponentsBuilder uriBuilder) {
 
-		Optional<Pauta> encontrada = pautaRepo.findById(idPauta);
-		if (encontrada.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pauta não encontrada id: " + idPauta);
-		}
+		Pauta pauta = encontrarPauta(idPauta);
+		Associado associado = encontrarAssociado(idAssociado);
 
-		Optional<Associado> encontrado = assocRepo.findById(idAssociado);
-		if (encontrado.isEmpty()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Associado não cadastrado id: " + idAssociado);
-		}
-
-		Pauta pauta = encontrada.get();
-		pauta.adicionarAssociado(encontrado.get());
-
+		pauta.adicionarAssociado(associado);
 		Pauta salva = pautaRepo.save(pauta);
-		PautaDTOS retorno = new PautaDTOS(salva);
 
-		return ResponseEntity.status(HttpStatus.OK).body(retorno);
+		return ResponseEntity.status(HttpStatus.OK).body(new PautaDTOS(salva));
 	}
 
+	public Pauta encontrarPauta(Long id) {
+		return pautaRepo.findById(id).orElseThrow(() -> {
+			throw new EntidadeNaoEncontradaException("Pauta não encontrada id: " + id);
+		});
+	}
+
+	public Associado encontrarAssociado(Long id) {
+		return assocRepo.findById(id).orElseThrow(() -> {
+			throw new EntidadeNaoEncontradaException("Associado não encontrado id: " + id);
+		});
+	}
 }
