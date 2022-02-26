@@ -17,7 +17,9 @@ import br.dev.leoduarte.sicredi.model.VotoNaPauta;
 import br.dev.leoduarte.sicredi.model.enuns.Voto;
 import br.dev.leoduarte.sicredi.repository.VotoNaPautaRepository;
 import br.dev.leoduarte.sicredi.utils.FormatarData;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class VotoNaPautaService {
 
@@ -27,7 +29,7 @@ public class VotoNaPautaService {
 	@Autowired
 	private VotoNaPautaRepository votoNaPautaRepo;
 
-	private FormatarData formatada = new FormatarData();
+	private FormatarData form = new FormatarData();
 
 	public ResponseEntity<Object> adicionarVotoDoAssociado(Long idPauta, Long idAssociado, Long voto,
 			UriComponentsBuilder uri) {
@@ -39,6 +41,7 @@ public class VotoNaPautaService {
 		verificaVotoDuplo(pauta, associado);
 
 		votoNaPautaRepo.save(new VotoNaPauta(pauta, associado, voto));
+		log.info("Voto cadastrado, Pauta ID: {} - Associado ID: {}", pauta.getId(), associado.getId());
 
 		return ResponseEntity.ok("Voto cadastrado");
 	}
@@ -48,6 +51,7 @@ public class VotoNaPautaService {
 		Pauta pauta = service.encontrarPauta(idPauta);
 
 		if (pauta.getVotos().size() == 0) {
+			log.debug("Sem votos para a paura, ID: {}", pauta.getId());
 			return ResponseEntity.ok(new Resultado(pauta.getId(), 0, 0));
 		}
 
@@ -65,7 +69,7 @@ public class VotoNaPautaService {
 	private boolean verificaSeSessaoJaExpirou(Pauta pauta) {
 		if (pauta.getTempLimiteVotacao().isBefore(LocalDateTime.now())) {
 			throw new SessaoDeVotacaoExpiradaException(
-					"O prazo de votação terminou em: " + formatada.formatar(pauta.getTempLimiteVotacao()));
+					"O prazo de votação terminou em: " + form.formatar(pauta.getTempLimiteVotacao()));
 		}
 
 		return true;

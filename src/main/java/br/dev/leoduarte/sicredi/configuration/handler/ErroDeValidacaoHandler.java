@@ -19,7 +19,9 @@ import br.dev.leoduarte.sicredi.exception.EntidadeNaoEncontradaException;
 import br.dev.leoduarte.sicredi.exception.SessaoDeVotacaoExpiradaException;
 import br.dev.leoduarte.sicredi.exception.VotoInvalidoException;
 import br.dev.leoduarte.sicredi.exception.VotoJaComputadoException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestControllerAdvice(basePackages = { "br.dev.leoduarte.sicredi.controller" })
 public class ErroDeValidacaoHandler {
 
@@ -37,6 +39,9 @@ public class ErroDeValidacaoHandler {
 			String mensagem = messageSource.getMessage(e, LocaleContextHolder.getLocale());
 			ErroDeDtoEntrada erro = new ErroDeDtoEntrada(e.getField(), mensagem);
 			dto.add(erro);
+
+			log.info("Erro de DTO Entrada: [Campo: {} - Erro: {}]", //
+					erro.getCampo(), erro.getErro());
 		});
 
 		return dto;
@@ -44,26 +49,31 @@ public class ErroDeValidacaoHandler {
 
 	@ExceptionHandler(DataInvalidaException.class)
 	public ResponseEntity<String> handleData(DataInvalidaException e) {
+		log.info("Data Invalida - {}", e.getMessage());
 		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 
 	@ExceptionHandler(VotoJaComputadoException.class)
 	public ResponseEntity<String> handleData(VotoJaComputadoException e) {
+		log.info("Voto Ja Computado - {}", e.getMessage());
 		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 
 	@ExceptionHandler(SessaoDeVotacaoExpiradaException.class)
 	public ResponseEntity<String> handleData(SessaoDeVotacaoExpiradaException e) {
+		log.info("Horario Encerrado - {}", e.getMessage());
 		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
 	public ResponseEntity<String> handleData(EntidadeNaoEncontradaException e) {
+		log.info("Entidade Nao Cadastrada - {}", e.getMessage());
 		return ResponseEntity.notFound().build();
 	}
 
 	@ExceptionHandler(VotoInvalidoException.class)
 	public ResponseEntity<String> handleData(VotoInvalidoException e) {
+		log.info("Voto Invalido - {}", e.getMessage());
 		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 }

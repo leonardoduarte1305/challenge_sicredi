@@ -12,7 +12,9 @@ import br.dev.leoduarte.sicredi.controller.dto.response.AssociadoDTOS;
 import br.dev.leoduarte.sicredi.exception.EntidadeNaoEncontradaException;
 import br.dev.leoduarte.sicredi.model.Associado;
 import br.dev.leoduarte.sicredi.repository.AssociadoRepository;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class AssociadoService {
 
@@ -22,6 +24,8 @@ public class AssociadoService {
 	public ResponseEntity<AssociadoDTOS> criarNovo(AssociadoDTOE novoAssociado, UriComponentsBuilder uriBuilder) {
 
 		Associado salvo = repository.save(new Associado(novoAssociado));
+		log.info("Associado criado, ID: {}", salvo.getId());
+
 		AssociadoDTOS retorno = new AssociadoDTOS(salvo);
 
 		URI uri = uriBuilder.path("/associados/{id}").buildAndExpand(retorno.getId()).toUri();

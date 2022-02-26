@@ -16,7 +16,9 @@ import br.dev.leoduarte.sicredi.model.Associado;
 import br.dev.leoduarte.sicredi.model.Pauta;
 import br.dev.leoduarte.sicredi.repository.AssociadoRepository;
 import br.dev.leoduarte.sicredi.repository.PautaRepository;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class PautaService {
 
@@ -29,6 +31,8 @@ public class PautaService {
 	@Transactional
 	public ResponseEntity<PautaDTOS> criarNova(PautaDTOE novaPauta, UriComponentsBuilder uriBuilder) {
 		Pauta salva = pautaRepo.save(new Pauta(novaPauta));
+		log.info("Pauta criada, ID: {}", salva.getId());
+
 		PautaDTOS retorno = new PautaDTOS(salva);
 
 		URI uri = uriBuilder.path("/pautas/{id}").buildAndExpand(retorno.getId()).toUri();
@@ -48,6 +52,7 @@ public class PautaService {
 
 		pauta.adicionarAssociado(associado);
 		Pauta salva = pautaRepo.save(pauta);
+		log.info("Associado inserido, Pauta ID: {}", salva.getId());
 
 		return ResponseEntity.status(HttpStatus.OK).body(new PautaDTOS(salva));
 	}
