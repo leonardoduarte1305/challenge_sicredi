@@ -2,7 +2,6 @@ package br.dev.leoduarte.sicredi.service;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -12,14 +11,15 @@ import br.dev.leoduarte.sicredi.controller.dto.response.AssociadoDTOS;
 import br.dev.leoduarte.sicredi.exception.EntidadeNaoEncontradaException;
 import br.dev.leoduarte.sicredi.model.Associado;
 import br.dev.leoduarte.sicredi.repository.AssociadoRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class AssociadoService {
 
-	@Autowired
-	private AssociadoRepository repository;
+	private final AssociadoRepository repository;
 
 	public ResponseEntity<AssociadoDTOS> criarNovo(AssociadoDTOE novoAssociado, UriComponentsBuilder uriBuilder) {
 

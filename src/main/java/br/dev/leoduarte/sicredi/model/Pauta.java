@@ -71,4 +71,12 @@ public class Pauta implements Serializable {
 		this.associados.add(associado);
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setVotos(List<VotoNaPauta> votos) {
+		this.votos = votos;
+	}
+
 }

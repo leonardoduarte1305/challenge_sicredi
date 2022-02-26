@@ -8,9 +8,13 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PautaDTOE {
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")

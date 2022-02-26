@@ -2,7 +2,6 @@ package br.dev.leoduarte.sicredi.service;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,17 +15,17 @@ import br.dev.leoduarte.sicredi.model.Associado;
 import br.dev.leoduarte.sicredi.model.Pauta;
 import br.dev.leoduarte.sicredi.repository.AssociadoRepository;
 import br.dev.leoduarte.sicredi.repository.PautaRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class PautaService {
 
-	@Autowired
-	private PautaRepository pautaRepo;
+	private final PautaRepository pautaRepo;
 
-	@Autowired
-	private AssociadoRepository assocRepo;
+	private final AssociadoRepository assocRepo;
 
 	@Transactional
 	public ResponseEntity<PautaDTOS> criarNova(PautaDTOE novaPauta, UriComponentsBuilder uriBuilder) {
@@ -68,4 +67,5 @@ public class PautaService {
 			throw new EntidadeNaoEncontradaException("Associado não encontrado id: " + id);
 		});
 	}
+
 }

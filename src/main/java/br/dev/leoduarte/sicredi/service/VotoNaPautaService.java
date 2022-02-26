@@ -3,7 +3,6 @@ package br.dev.leoduarte.sicredi.service;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,17 +16,17 @@ import br.dev.leoduarte.sicredi.model.VotoNaPauta;
 import br.dev.leoduarte.sicredi.model.enuns.Voto;
 import br.dev.leoduarte.sicredi.repository.VotoNaPautaRepository;
 import br.dev.leoduarte.sicredi.utils.FormatarData;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class VotoNaPautaService {
 
-	@Autowired
-	private PautaService service;
+	private final PautaService service;
 
-	@Autowired
-	private VotoNaPautaRepository votoNaPautaRepo;
+	private final VotoNaPautaRepository votoNaPautaRepo;
 
 	private FormatarData form = new FormatarData();
 
@@ -38,7 +37,10 @@ public class VotoNaPautaService {
 		verificaSeSessaoJaExpirou(pauta);
 
 		Associado associado = service.encontrarAssociado(idAssociado);
-		verificaVotoDuplo(pauta, associado);
+
+		if (pauta.getAssociados().size() != 0) {
+			verificaVotoDuplo(pauta, associado);
+		}
 
 		votoNaPautaRepo.save(new VotoNaPauta(pauta, associado, voto));
 		log.info("Voto cadastrado, Pauta ID: {} - Associado ID: {}", pauta.getId(), associado.getId());
@@ -84,4 +86,5 @@ public class VotoNaPautaService {
 
 		return true;
 	}
+
 }

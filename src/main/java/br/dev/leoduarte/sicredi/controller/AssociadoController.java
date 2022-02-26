@@ -1,5 +1,7 @@
 package br.dev.leoduarte.sicredi.controller;
 
+import java.io.Serializable;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -18,7 +20,7 @@ import br.dev.leoduarte.sicredi.service.VotoNaPautaService;
 
 @RestController
 @RequestMapping(path = "/associados")
-public class AssociadoController {
+public class AssociadoController implements Serializable{
 
 	@Autowired
 	private AssociadoService service;

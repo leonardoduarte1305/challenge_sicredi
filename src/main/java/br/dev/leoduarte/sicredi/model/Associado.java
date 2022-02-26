@@ -34,4 +34,8 @@ public class Associado implements Serializable {
 		this.nome = novoAssociado.getNome();
 	}
 
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 }
