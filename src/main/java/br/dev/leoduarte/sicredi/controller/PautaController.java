@@ -23,6 +23,8 @@ import br.dev.leoduarte.sicredi.service.VotoNaPautaService;
 @RequestMapping(path = "/pautas")
 public class PautaController implements Serializable {
 
+	private static final long serialVersionUID = 6249390661562377407L;
+
 	@Autowired
 	private PautaService service;
 

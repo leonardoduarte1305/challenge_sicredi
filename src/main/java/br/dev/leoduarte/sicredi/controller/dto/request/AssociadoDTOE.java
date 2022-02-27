@@ -16,6 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AssociadoDTOE implements Serializable {
 
+	private static final long serialVersionUID = 6631370239834224366L;
+
 	@NotNull(message = "O nome não pode ser nulo.")
 	@NotBlank(message = "O nome não pode estar em branco")
 	@NotEmpty(message = "O nome não pode estar vazio")

@@ -20,7 +20,9 @@ import br.dev.leoduarte.sicredi.service.VotoNaPautaService;
 
 @RestController
 @RequestMapping(path = "/associados")
-public class AssociadoController implements Serializable{
+public class AssociadoController implements Serializable {
+
+	private static final long serialVersionUID = -6196616588859521668L;
 
 	@Autowired
 	private AssociadoService service;
