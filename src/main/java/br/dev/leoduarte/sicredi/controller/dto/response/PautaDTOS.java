@@ -1,14 +1,19 @@
 package br.dev.leoduarte.sicredi.controller.dto.response;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import br.dev.leoduarte.sicredi.model.Pauta;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class PautaDTOS {
+@NoArgsConstructor
+public class PautaDTOS implements Serializable {
+
+	private static final long serialVersionUID = 1574747007213848914L;
 
 	private Long id;
 

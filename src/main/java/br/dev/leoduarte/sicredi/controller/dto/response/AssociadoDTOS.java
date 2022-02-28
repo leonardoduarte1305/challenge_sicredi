@@ -1,10 +1,16 @@
 package br.dev.leoduarte.sicredi.controller.dto.response;
 
+import java.io.Serializable;
+
 import br.dev.leoduarte.sicredi.model.Associado;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class AssociadoDTOS {
+@NoArgsConstructor
+public class AssociadoDTOS implements Serializable {
+
+	private static final long serialVersionUID = 6532890292940933771L;
 
 	private Long id;
 	private String nome;

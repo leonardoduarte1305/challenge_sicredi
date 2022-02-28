@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.dev.leoduarte.sicredi.controller.dto.response.Resultado;
 import br.dev.leoduarte.sicredi.exception.AssociadoNaoCadastradoNaPautaException;
 import br.dev.leoduarte.sicredi.exception.VotoJaComputadoException;
 import br.dev.leoduarte.sicredi.model.Associado;
@@ -111,6 +112,70 @@ public class VotoNaPautaServiceTest {
 		String recebida = e.getMessage();
 
 		Assertions.assertTrue(recebida.startsWith(esperada));
+	}
+
+	@Test
+	void deveRetornarOkSeContabilizarCorretamenteAVotacaoComSim() {
+		// Pego uma pauta
+		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
+		when(pautaRepo.findById(2L)).thenReturn(Optional.of(pauta));
+
+		// Pego um Associado
+		Associado associado = new AuxilioParaTestes().novoAssociadoComId(3L, "Associado");
+
+		// Associo o associado a uma pauta
+		pauta.adicionarAssociado(associado);
+
+		// Cadastro o voto dele
+		VotoNaPauta votado = new VotoNaPauta(pauta, associado, 0L);
+		pauta.setVotos(List.of(votado));
+
+		int esperadoSIM = 1;
+		int esperadoNAO = 0;
+
+		ResponseEntity<Resultado> retorno = votoNaPautaService.contabilizarVotacao(pauta.getId());
+
+		Assertions.assertEquals(esperadoSIM, retorno.getBody().getQtdVotosSim());
+		Assertions.assertEquals(esperadoNAO, retorno.getBody().getQtdVotosNao());
+	}
+
+	@Test
+	void deveRetornarOkSeContabilizarCorretamenteAVotacaoComNao() {
+		// Pego uma pauta
+		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
+		when(pautaRepo.findById(2L)).thenReturn(Optional.of(pauta));
+
+		// Pego um Associado
+		Associado associado = new AuxilioParaTestes().novoAssociadoComId(3L, "Associado");
+
+		// Associo o associado a uma pauta
+		pauta.adicionarAssociado(associado);
+
+		// Cadastro o voto dele
+		VotoNaPauta votado = new VotoNaPauta(pauta, associado, 1L);
+		pauta.setVotos(List.of(votado));
+
+		int esperadoSIM = 0;
+		int esperadoNAO = 1;
+
+		ResponseEntity<Resultado> retorno = votoNaPautaService.contabilizarVotacao(pauta.getId());
+
+		Assertions.assertEquals(esperadoSIM, retorno.getBody().getQtdVotosSim());
+		Assertions.assertEquals(esperadoNAO, retorno.getBody().getQtdVotosNao());
+	}
+
+	@Test
+	void deveRetornarOkSeRetornarContagemDevotosIguaisAZero() {
+		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
+		when(pautaRepo.findById(2L)).thenReturn(Optional.of(pauta));
+
+		int esperadoSIM = 0;
+		int esperadoNAO = 0;
+
+		ResponseEntity<Resultado> retorno = votoNaPautaService.contabilizarVotacao(pauta.getId());
+
+		Assertions.assertEquals(esperadoSIM, retorno.getBody().getQtdVotosSim());
+		Assertions.assertEquals(esperadoNAO, retorno.getBody().getQtdVotosNao());
 	}
 
 }

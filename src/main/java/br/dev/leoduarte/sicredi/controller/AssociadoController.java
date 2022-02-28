@@ -17,18 +17,20 @@ import br.dev.leoduarte.sicredi.controller.dto.request.AssociadoDTOE;
 import br.dev.leoduarte.sicredi.controller.dto.response.AssociadoDTOS;
 import br.dev.leoduarte.sicredi.service.AssociadoService;
 import br.dev.leoduarte.sicredi.service.VotoNaPautaService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "/associados")
 public class AssociadoController implements Serializable {
 
 	private static final long serialVersionUID = -6196616588859521668L;
 
 	@Autowired
-	private AssociadoService service;
+	private final AssociadoService service;
 
 	@Autowired
-	private VotoNaPautaService votoNaPautaService;
+	private final VotoNaPautaService votoNaPautaService;
 
 	@PostMapping
 	public ResponseEntity<AssociadoDTOS> criarNovoAssociado( //

@@ -8,14 +8,14 @@ import br.dev.leoduarte.sicredi.model.Pauta;
 
 public class AuxilioParaTestes {
 
-	public Pauta novaPauta(long id, String nome, LocalDateTime plusMinutes) {
+	public Pauta novaPauta(Long id, String nome, LocalDateTime plusMinutes) {
 		PautaDTOE obj = new PautaDTOE(plusMinutes, nome);
 		Pauta pauta = new Pauta(obj);
 		pauta.setId(id);
 		return pauta;
 	}
 
-	public Associado novoAssociadoComId(long id, String nome) {
+	public Associado novoAssociadoComId(Long id, String nome) {
 		Associado associado = new Associado(nome);
 		associado.setId(id);
 		return associado;

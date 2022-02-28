@@ -1,7 +1,6 @@
 package br.dev.leoduarte.sicredi.service;
 
 import java.time.LocalDateTime;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class VotoNaPautaService {
 
 	private final VotoNaPautaRepository votoNaPautaRepo;
 
-	private FormatarData form = new FormatarData();
+	private final FormatarData form = new FormatarData();
 
 	public ResponseEntity<Object> adicionarVotoDoAssociado(Long idPauta, Long idAssociado, Long voto,
 			UriComponentsBuilder uri) {
@@ -51,13 +50,6 @@ public class VotoNaPautaService {
 		return ResponseEntity.ok("Voto cadastrado");
 	}
 
-	private void associadoNaoEstaNaPauta(Pauta pauta, Associado associado) {
-		if (!pauta.getAssociados().contains(associado)) {
-			throw new AssociadoNaoCadastradoNaPautaException("Este associado não pode votar nesta pauta");
-		}
-
-	}
-
 	public ResponseEntity<Resultado> contabilizarVotacao(Long idPauta) {
 
 		Pauta pauta = service.encontrarPauta(idPauta);
@@ -71,11 +63,11 @@ public class VotoNaPautaService {
 	}
 
 	private int contarVotosNao(Pauta pauta) {
-		return pauta.getVotos().stream().filter(v -> v.getVoto().equals(Voto.NAO)).collect(Collectors.toList()).size();
+		return (int) pauta.getVotos().stream().filter(v -> v.getVoto().equals(Voto.NAO)).count();
 	}
 
 	private int contarVotosSim(Pauta pauta) {
-		return pauta.getVotos().stream().filter(v -> v.getVoto().equals(Voto.SIM)).collect(Collectors.toList()).size();
+		return (int) pauta.getVotos().stream().filter(v -> v.getVoto().equals(Voto.SIM)).count();
 	}
 
 	private boolean verificaSeSessaoJaExpirou(Pauta pauta) {
@@ -97,4 +89,10 @@ public class VotoNaPautaService {
 		return true;
 	}
 
+	private void associadoNaoEstaNaPauta(Pauta pauta, Associado associado) {
+		if (!pauta.getAssociados().contains(associado)) {
+			throw new AssociadoNaoCadastradoNaPautaException("Este associado não pode votar nesta pauta");
+		}
+
+	}
 }
