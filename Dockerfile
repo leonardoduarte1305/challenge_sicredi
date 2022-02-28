@@ -1,4 +1,4 @@
-FROM openjdk:12-alpine
+FROM openjdk:17-alpine
 
 ARG APP_NAME=target/*.jar
 COPY ${APP_NAME} api.jar

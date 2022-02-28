@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.dev.leoduarte.sicredi.controller.dto.response.Resultado;
+import br.dev.leoduarte.sicredi.exception.AssociadoNaoCadastradoNaPautaException;
 import br.dev.leoduarte.sicredi.exception.SessaoDeVotacaoExpiradaException;
 import br.dev.leoduarte.sicredi.exception.VotoJaComputadoException;
 import br.dev.leoduarte.sicredi.model.Associado;
@@ -38,7 +39,9 @@ public class VotoNaPautaService {
 
 		Associado associado = service.encontrarAssociado(idAssociado);
 
-		if (pauta.getAssociados().size() != 0) {
+		associadoNaoEstaNaPauta(pauta, associado);
+
+		if (!pauta.getAssociados().isEmpty()) {
 			verificaVotoDuplo(pauta, associado);
 		}
 
@@ -46,6 +49,13 @@ public class VotoNaPautaService {
 		log.info("Voto cadastrado, Pauta ID: {} - Associado ID: {}", pauta.getId(), associado.getId());
 
 		return ResponseEntity.ok("Voto cadastrado");
+	}
+
+	private void associadoNaoEstaNaPauta(Pauta pauta, Associado associado) {
+		if (!pauta.getAssociados().contains(associado)) {
+			throw new AssociadoNaoCadastradoNaPautaException("Este associado não pode votar nesta pauta");
+		}
+
 	}
 
 	public ResponseEntity<Resultado> contabilizarVotacao(Long idPauta) {

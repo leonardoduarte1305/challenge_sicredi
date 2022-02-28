@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import br.dev.leoduarte.sicredi.exception.AssociadoNaoCadastradoNaPautaException;
 import br.dev.leoduarte.sicredi.exception.VotoJaComputadoException;
 import br.dev.leoduarte.sicredi.model.Associado;
 import br.dev.leoduarte.sicredi.model.Pauta;
@@ -47,12 +48,14 @@ public class VotoNaPautaServiceTest {
 	}
 
 	@Test
-	void deveRetornarOkSeSalvarNovaVoto() {
+	void deveRetornarOkSeSalvarNovoVoto() {
 		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
 		when(pautaRepo.findById(2L)).thenReturn(Optional.of(pauta));
 
 		Associado associado = new AuxilioParaTestes().novoAssociadoComId(3L, "Associado");
 		when(assocRepo.findById(3L)).thenReturn(Optional.of(associado));
+
+		pauta.adicionarAssociado(associado);
 
 		when(votoNaPautaRepo.save(any(VotoNaPauta.class))).thenReturn(new VotoNaPauta(pauta, associado, 0L));
 
@@ -61,6 +64,25 @@ public class VotoNaPautaServiceTest {
 
 		String esperado = "Voto cadastrado";
 		Assertions.assertTrue(retorno.getBody().toString().contains(esperado));
+	}
+
+	@Test
+	void deveRetornarOkSeNaoSalvarVotoDeAssociadoNaoCadastrado() {
+		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
+		when(pautaRepo.findById(2L)).thenReturn(Optional.of(pauta));
+
+		Associado associado = new AuxilioParaTestes().novoAssociadoComId(3L, "Associado");
+		when(assocRepo.findById(3L)).thenReturn(Optional.of(associado));
+
+		Exception e = assertThrows(AssociadoNaoCadastradoNaPautaException.class, () -> {
+			Optional.of(votoNaPautaService.adicionarVotoDoAssociado(pauta.getId(), associado.getId(), 1L, uriBuilder))
+					.orElseThrow();
+		});
+
+		String esperada = "Este associado não pode votar nesta pauta";
+		String recebida = e.getMessage();
+
+		Assertions.assertTrue(recebida.startsWith(esperada));
 	}
 
 	@Test

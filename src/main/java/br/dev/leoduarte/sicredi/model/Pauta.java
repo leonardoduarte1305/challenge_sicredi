@@ -44,12 +44,14 @@ public class Pauta implements Serializable {
 
 	public Pauta() {
 		this.associados = new ArrayList<>();
+		this.votos = new ArrayList<>();
 	}
 
 	public Pauta(PautaDTOE obj) {
 		this.associados = new ArrayList<>();
 		this.nomeAssembleia = obj.getNomeAssembleia();
 		this.tempLimiteVotacao = verificarLimiteVotacao(obj.getTempLimiteVotacao());
+		this.votos = new ArrayList<>();
 	}
 
 	private LocalDateTime verificarLimiteVotacao(LocalDateTime t) {

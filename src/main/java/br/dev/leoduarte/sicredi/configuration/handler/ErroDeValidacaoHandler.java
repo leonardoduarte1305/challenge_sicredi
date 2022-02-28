@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import br.dev.leoduarte.sicredi.exception.AssociadoNaoCadastradoNaPautaException;
 import br.dev.leoduarte.sicredi.exception.DataInvalidaException;
 import br.dev.leoduarte.sicredi.exception.EntidadeNaoEncontradaException;
 import br.dev.leoduarte.sicredi.exception.SessaoDeVotacaoExpiradaException;
@@ -48,32 +49,38 @@ public class ErroDeValidacaoHandler {
 	}
 
 	@ExceptionHandler(DataInvalidaException.class)
-	public ResponseEntity<String> handleData(DataInvalidaException e) {
+	public ResponseEntity<String> handle(DataInvalidaException e) {
 		log.info("Data Invalida - {}", e.getMessage());
 		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 
 	@ExceptionHandler(VotoJaComputadoException.class)
-	public ResponseEntity<String> handleData(VotoJaComputadoException e) {
+	public ResponseEntity<String> handle(VotoJaComputadoException e) {
 		log.info("Voto Ja Computado - {}", e.getMessage());
 		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 
 	@ExceptionHandler(SessaoDeVotacaoExpiradaException.class)
-	public ResponseEntity<String> handleData(SessaoDeVotacaoExpiradaException e) {
+	public ResponseEntity<String> handle(SessaoDeVotacaoExpiradaException e) {
 		log.info("Horario Encerrado - {}", e.getMessage());
 		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 
 	@ExceptionHandler(EntidadeNaoEncontradaException.class)
-	public ResponseEntity<String> handleData(EntidadeNaoEncontradaException e) {
+	public ResponseEntity<String> handle(EntidadeNaoEncontradaException e) {
 		log.info("Entidade Nao Cadastrada - {}", e.getMessage());
 		return ResponseEntity.notFound().build();
 	}
 
 	@ExceptionHandler(VotoInvalidoException.class)
-	public ResponseEntity<String> handleData(VotoInvalidoException e) {
+	public ResponseEntity<String> handle(VotoInvalidoException e) {
 		log.info("Voto Invalido - {}", e.getMessage());
+		return ResponseEntity.badRequest().body(e.getMessage());
+	}
+
+	@ExceptionHandler(AssociadoNaoCadastradoNaPautaException.class)
+	public ResponseEntity<String> handle(AssociadoNaoCadastradoNaPautaException e) {
+		log.info("Associado não cadastrado na pauta - {}", e.getMessage());
 		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 }
