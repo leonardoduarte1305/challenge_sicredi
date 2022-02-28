@@ -19,6 +19,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import br.dev.leoduarte.sicredi.controller.dto.response.Resultado;
 import br.dev.leoduarte.sicredi.exception.AssociadoNaoCadastradoNaPautaException;
+import br.dev.leoduarte.sicredi.exception.VotoInvalidoException;
 import br.dev.leoduarte.sicredi.exception.VotoJaComputadoException;
 import br.dev.leoduarte.sicredi.model.Associado;
 import br.dev.leoduarte.sicredi.model.Pauta;
@@ -68,7 +69,7 @@ public class VotoNaPautaServiceTest {
 	}
 
 	@Test
-	void deveRetornarOkSeNaoSalvarVotoDeAssociadoNaoCadastrado() {
+	void deveLancarExcecaoSeAssociadoNaoCadastradoTentarVotar() {
 		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
 		when(pautaRepo.findById(2L)).thenReturn(Optional.of(pauta));
 
@@ -87,7 +88,7 @@ public class VotoNaPautaServiceTest {
 	}
 
 	@Test
-	void deveRetornarExcecaoSeTentarVotarNovamente() {
+	void deveLancarExcecaoSeTentarVotarNovamente() {
 		// Pego uma pauta
 		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
 		when(pautaRepo.findById(2L)).thenReturn(Optional.of(pauta));
@@ -178,4 +179,23 @@ public class VotoNaPautaServiceTest {
 		Assertions.assertEquals(esperadoNAO, retorno.getBody().getQtdVotosNao());
 	}
 
+	@Test
+	void deveLancarExcecaoSeTentarInsetirVotoInvalido() {
+		Associado associado = new AuxilioParaTestes().novoAssociadoComId(3L, "Associado");
+		when(assocRepo.findById(3L)).thenReturn(Optional.of(associado));
+
+		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
+		pauta.adicionarAssociado(associado);
+		when(pautaRepo.findById(2L)).thenReturn(Optional.of(pauta));
+
+		Exception e = assertThrows(VotoInvalidoException.class, () -> {
+			Optional.of(votoNaPautaService.adicionarVotoDoAssociado(pauta.getId(), associado.getId(), 5L, uriBuilder))
+					.orElseThrow();
+		});
+
+		String esperada = "Alternativa de voto inválida: ";
+		String recebida = e.getMessage();
+
+		Assertions.assertTrue(recebida.startsWith(esperada));
+	}
 }
