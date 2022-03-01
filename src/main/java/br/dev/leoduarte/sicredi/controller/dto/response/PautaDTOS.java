@@ -6,11 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import br.dev.leoduarte.sicredi.model.Pauta;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
 public class PautaDTOS implements Serializable {
 
 	private static final long serialVersionUID = 1574747007213848914L;
@@ -28,6 +24,14 @@ public class PautaDTOS implements Serializable {
 		this.nomeAssembleia = obj.getNomeAssembleia();
 		this.tempLimiteVotacao = obj.getTempLimiteVotacao();
 		this.associados = obj.getAssociados().stream().map(AssociadoDTOS::new).collect(Collectors.toList());
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getNomeAssembleia() {
+		return nomeAssembleia;
 	}
 
 }

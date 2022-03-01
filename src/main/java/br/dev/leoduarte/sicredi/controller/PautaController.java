@@ -2,7 +2,6 @@ package br.dev.leoduarte.sicredi.controller;
 
 import java.io.Serializable;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,18 +17,18 @@ import br.dev.leoduarte.sicredi.controller.dto.response.PautaDTOS;
 import br.dev.leoduarte.sicredi.controller.dto.response.Resultado;
 import br.dev.leoduarte.sicredi.service.PautaService;
 import br.dev.leoduarte.sicredi.service.VotoNaPautaService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "/pautas")
 public class PautaController implements Serializable {
 
 	private static final long serialVersionUID = 6249390661562377407L;
 
-	@Autowired
-	private PautaService service;
+	private final PautaService service;
 
-	@Autowired
-	private VotoNaPautaService votoNaPautaService;
+	private final VotoNaPautaService votoNaPautaService;
 
 	@PostMapping
 	public ResponseEntity<PautaDTOS> criarNovaPauta( //

@@ -43,8 +43,4 @@ public class VotoNaPauta implements Serializable {
 		throw new VotoInvalidoException("Alternativa de voto inválida: " + voto + " - " + VotoNaPauta.class.getName());
 	}
 
-	public void setVoto(Voto voto) {
-		this.voto = voto;
-	}
-
 }

@@ -116,6 +116,26 @@ public class VotoNaPautaServiceTest {
 	}
 
 	@Test
+	void deveLancarExcecaoSeTentarInsetirVotoInvalido() {
+		Associado associado = new AuxilioParaTestes().novoAssociadoComId(3L, "Associado");
+		when(assocRepo.findById(3L)).thenReturn(Optional.of(associado));
+
+		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
+		pauta.adicionarAssociado(associado);
+		when(pautaRepo.findById(2L)).thenReturn(Optional.of(pauta));
+
+		Exception e = assertThrows(VotoInvalidoException.class, () -> {
+			Optional.of(votoNaPautaService.adicionarVotoDoAssociado(pauta.getId(), associado.getId(), 5L, uriBuilder))
+					.orElseThrow();
+		});
+
+		String esperada = "Alternativa de voto inválida: ";
+		String recebida = e.getMessage();
+
+		Assertions.assertTrue(recebida.startsWith(esperada));
+	}
+
+	@Test
 	void deveRetornarOkSeContabilizarCorretamenteAVotacaoComSim() {
 		// Pego uma pauta
 		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
@@ -179,23 +199,4 @@ public class VotoNaPautaServiceTest {
 		Assertions.assertEquals(esperadoNAO, retorno.getBody().getQtdVotosNao());
 	}
 
-	@Test
-	void deveLancarExcecaoSeTentarInsetirVotoInvalido() {
-		Associado associado = new AuxilioParaTestes().novoAssociadoComId(3L, "Associado");
-		when(assocRepo.findById(3L)).thenReturn(Optional.of(associado));
-
-		Pauta pauta = new AuxilioParaTestes().novaPauta(2L, "Pauta teste", LocalDateTime.now().plusMinutes(5));
-		pauta.adicionarAssociado(associado);
-		when(pautaRepo.findById(2L)).thenReturn(Optional.of(pauta));
-
-		Exception e = assertThrows(VotoInvalidoException.class, () -> {
-			Optional.of(votoNaPautaService.adicionarVotoDoAssociado(pauta.getId(), associado.getId(), 5L, uriBuilder))
-					.orElseThrow();
-		});
-
-		String esperada = "Alternativa de voto inválida: ";
-		String recebida = e.getMessage();
-
-		Assertions.assertTrue(recebida.startsWith(esperada));
-	}
 }

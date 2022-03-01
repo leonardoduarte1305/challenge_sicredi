@@ -2,7 +2,6 @@ package br.dev.leoduarte.sicredi.controller;
 
 import java.io.Serializable;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +25,8 @@ public class AssociadoController implements Serializable {
 
 	private static final long serialVersionUID = -6196616588859521668L;
 
-	@Autowired
 	private final AssociadoService service;
 
-	@Autowired
 	private final VotoNaPautaService votoNaPautaService;
 
 	@PostMapping

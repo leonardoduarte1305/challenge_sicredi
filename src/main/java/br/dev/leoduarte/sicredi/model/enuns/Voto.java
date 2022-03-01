@@ -10,8 +10,4 @@ public enum Voto {
 		this.cod = i;
 	}
 
-	public int getCod() {
-		return cod;
-	}
-
 }

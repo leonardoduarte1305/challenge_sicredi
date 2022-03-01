@@ -6,11 +6,9 @@ import javax.persistence.Embeddable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Embeddable
-@Getter
 @NoArgsConstructor
 public class VotoNaPautaPK implements Serializable {
 
@@ -27,6 +25,10 @@ public class VotoNaPautaPK implements Serializable {
 	public VotoNaPautaPK(Pauta pauta, Associado associado) {
 		this.pauta = pauta;
 		this.associado = associado;
+	}
+
+	public Associado getAssociado() {
+		return associado;
 	}
 
 }

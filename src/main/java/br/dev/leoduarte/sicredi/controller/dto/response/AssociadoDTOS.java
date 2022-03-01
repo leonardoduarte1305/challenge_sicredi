@@ -4,10 +4,8 @@ import java.io.Serializable;
 
 import br.dev.leoduarte.sicredi.model.Associado;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
 public class AssociadoDTOS implements Serializable {
 
 	private static final long serialVersionUID = 6532890292940933771L;
