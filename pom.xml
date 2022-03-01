@@ -116,7 +116,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>api-leo</finalName>
+		<finalName>api</finalName>
 
 		<resources>
 			<resource>
