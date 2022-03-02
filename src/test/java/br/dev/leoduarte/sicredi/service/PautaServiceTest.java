@@ -105,7 +105,7 @@ public class PautaServiceTest {
 		obj.adicionarAssociado(associado);
 		when(pautaRepo.save(any(Pauta.class))).thenReturn(pautaComAssociado);
 
-		ResponseEntity<Object> retorno = service.adicionarAssociado(obj.getId(), associado.getId(), uriBuilder);
+		ResponseEntity<PautaDTOS> retorno = service.adicionarAssociado(obj.getId(), associado.getId(), uriBuilder);
 		Assertions.assertEquals(retorno.getStatusCodeValue(), 200);
 	}
 

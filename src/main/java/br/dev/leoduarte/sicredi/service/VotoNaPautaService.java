@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.dev.leoduarte.sicredi.controller.dto.response.Resultado;
@@ -30,6 +31,7 @@ public class VotoNaPautaService {
 
 	private final FormatarData form = new FormatarData();
 
+	@Transactional
 	public ResponseEntity<Object> adicionarVotoDoAssociado(Long idPauta, Long idAssociado, Long voto,
 			UriComponentsBuilder uri) {
 

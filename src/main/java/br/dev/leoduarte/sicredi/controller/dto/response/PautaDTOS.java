@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import br.dev.leoduarte.sicredi.model.Pauta;
+import br.dev.leoduarte.sicredi.utils.FormatarData;
 
 public class PautaDTOS implements Serializable {
 
@@ -32,6 +33,14 @@ public class PautaDTOS implements Serializable {
 
 	public String getNomeAssembleia() {
 		return nomeAssembleia;
+	}
+
+	public String getTempLimiteVotacao() {
+		return new FormatarData().formatar(tempLimiteVotacao);
+	}
+
+	public List<AssociadoDTOS> getAssociados() {
+		return associados;
 	}
 
 }

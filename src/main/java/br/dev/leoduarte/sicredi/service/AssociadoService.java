@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.dev.leoduarte.sicredi.controller.dto.request.AssociadoDTOE;
@@ -21,6 +22,7 @@ public class AssociadoService {
 
 	private final AssociadoRepository repository;
 
+	@Transactional
 	public ResponseEntity<AssociadoDTOS> criarNovo(AssociadoDTOE novoAssociado, UriComponentsBuilder uriBuilder) {
 
 		Associado salvo = repository.save(new Associado(novoAssociado));

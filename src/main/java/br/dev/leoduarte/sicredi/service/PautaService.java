@@ -44,7 +44,8 @@ public class PautaService {
 	}
 
 	@Transactional
-	public ResponseEntity<Object> adicionarAssociado(Long idPauta, Long idAssociado, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<PautaDTOS> adicionarAssociado(Long idPauta, Long idAssociado,
+			UriComponentsBuilder uriBuilder) {
 
 		Pauta pauta = encontrarPauta(idPauta);
 		Associado associado = encontrarAssociado(idAssociado);
